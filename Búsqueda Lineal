@@ -1,0 +1,25 @@
+import os    # Se importa la libreria os
+def limpiar_terminal():    # Se crea la funcion limpar_terminal
+        os.system("cls")    # Ejecuto el comando cls
+limpiar_terminal()       # Llamo la funcion creada
+
+elementos = [5, 7, 10, 12, 15, 60, 69, 98, 90, 24, 35, 33, 11] # Defino la lista de elementos
+
+print("📝 La lista de elementos es:", elementos) # Muestro la lista de elementos
+print(40*"-")                                 # Imprimo un separador para visualizar mejor la salida
+x = int(input("Ingrese el elemento a buscar: ")) # Solicito el elemento a buscar y lo convierto a entero
+
+i = encontrado = 0     # Inicializo el contador 'i' en 0 y la variable bandera 'encontrado' en 0 (False)
+
+while i < len(elementos):  # Inicio un bucle while que se ejecuta mientras 'i' sea menor que la longitud de la lista
+	if elementos[i] == x:   # Comparo si el elemento en la posición actual 'i' es igual al valor buscado 'x'
+		encontrado = 1       # Si hay coincidencia, cambio la bandera 'encontrado' a 1 (True)
+		break              # Salgo inmediatamente del bucle while para evitar búsquedas innecesarias
+
+	i = i + 1           # Incremento el contador 'i' en 1 para pasar al siguiente elemento de la lista
+print(40*"-")
+if encontrado == 1:            # Verifico si la bandera 'encontrado' es igual a 1 (True)
+	print("🎯 Elemento encontrado en la posición:", i + 1)  # Muestro mensaje de éxito con la posición (sumo 1 porque los índices empiezan en 0)
+else:                                                     # Si la bandera 'encontrado' no es 1 (es 0 - False)
+	print("❌ Elemento no encontrado")                 # Indico que no se encontró el elemento
+print(40*"-")   
