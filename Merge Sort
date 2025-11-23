@@ -1,0 +1,67 @@
+import os    # Se importa la libreria os
+def limpiar_terminal():    # Se crea la funcion limpar_terminal
+        os.system("cls")    # Ejecuto el comando cls
+limpiar_terminal()       # Llamo la funcion creada
+
+def merge_sort_simple(lista):                  # defino la funcion merge_sort_simple 
+    """
+    Versión simplificada de Merge Sort
+    """
+    if len(lista) <= 1:                        # Caso base de la recursión 
+        return lista                           # Retorno la lista tal cual si tiene 1 o 0 elementos
+    
+    medio = len(lista) // 2                        # Encuentro el punto medio de la lista 
+    izquierda = merge_sort_simple(lista[:medio])   # Ordeno la mitad izquierda recursivamente 
+    derecha = merge_sort_simple(lista[medio:])     # Ordeno la mitad derecha recursivamente 
+    
+    # Mezclar
+    resultado = []                                  # Lista para el resultado ordenado 
+    i = j = 0                                        # Índices para izquierda y derecha 
+    while i < len(izquierda) and j < len(derecha):  # Mientras haya elementos en ambas mitades 
+        if izquierda[i] < derecha[j]:                # Comparo elementos 
+            resultado.append(izquierda[i])          # Agrego el menor al resultado  
+            i += 1                                   # Incremento índice izquierda 
+        else:                                       # Si el elemento de la derecha es menor o igual 
+            resultado.append(derecha[j])             # Agrego el menor al resultado 
+            j += 1                                  # Incremento índice derecha 
+    
+    return resultado + izquierda[i:] + derecha[j:]   # Retorno la lista ordenada completa 
+
+def buscar_lineal(lista, numero):                   # defino la funcion buscar_lineal 
+    """
+    Busca un número en la lista (búsqueda lineal simple)
+    """
+    print(f"\n🔍 Buscando {numero}...")
+    
+    for i, valor in enumerate(lista):               # Recorro la lista con índice y valor 
+        if valor == numero:                          # Si encuentro el número:
+            return i                                  # Retorno la posición 
+    
+    return -1                                         # No encontrado 
+
+# PROGRAMA PRINCIPAL SIMPLIFICADO
+print("🎯 MERGE SORT + BÚSQUEDA")
+print("=" * 35)
+
+# Lista de ejemplo
+datos = [64, 34, 25, 12, 22, 11, 90, 45, 78]      # Defino la lista de datos 
+print(f"Lista original: {datos}")                  # Muestro la lista original 
+
+# Ordenar
+datos_ordenados = merge_sort_simple(datos)        # Ordeno la lista usando Merge Sort simple 
+print(f"Lista ordenada: {datos_ordenados}")        # Muestro la lista ordenada 
+
+# Buscar número
+print("\n" + "-" * 35)
+try:                                                       # Manejo de errores por si el input no es un número válido 
+    buscar = int(input("¿Qué número quieres buscar?: "))    # Solicito el número a buscar y lo convierto a entero 
+    
+    posicion = buscar_lineal(datos_ordenados, buscar)      # Realizo la búsqueda lineal en la lista ordenada 
+    
+    if posicion != -1:                                        # Si se encontró el número:
+        print(f"✅ Encontrado en posición {posicion + 1}")   # Muestro la posición (sumo 1 porque los índices empiezan en 0) 
+    else:
+        print("❌ No encontrado")
+        
+except:
+    print("❌ Error: Ingresa un número válido")
