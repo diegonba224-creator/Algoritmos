@@ -1,0 +1,186 @@
+"""
+Escribe una función Analizar (estudiantes1, estudiantes2) que reciba dos conjuntos de nombres de estudiantes. 
+La función deberá retornar un diccionario con la siguiente información:
+Un conjunto de estudiantes que estén en ambos grupos
+Un conjunto de estudiantes que solo están en el primer grupo
+Un conjunto de estudiantes que solo están en el segundo grupo
+Un conjunto de todos los estudiantes.
+
+REQUISITOS
+Los nombres de los estudiantes deben ser ignorados en cuanto a mayúsculas/minúsculas (Juan/JUAN) deben ser considerados el mismo nombre.
+Debes tener una segunda función para el ingreso y validación de datos de los estudiantes:
+
+Validaciones:
+El nombre no debe estar vacío. Inténtelo de nuevo.
+El nombre no puede contener números. Inténtelo de nuevo.
+Al ingresar un estudiante, debe aparecer un mensaje en pantalla:  ingrese el nombre del estudiante número 1 o fin para terminar. 
+Mostrar ordenado y adecuadamente los resultados obtenidos, NO MOSTRARLOS EN FORMA DE CONJUNTO (HACER UN RECORRIDO DEL 
+ITERABLE Y PRESENTAR LA INFORMACIÓN).    
+"""
+
+
+import os    # Se importa la libreria os
+def limpiar_terminal():    # Se crea la funcion limpar_terminal
+        os.system("cls")    # Ejecuto el comando cls
+limpiar_terminal()       # Llamo la funcion creada
+
+
+def ingresar_estudiantes():
+    """
+    Función para ingresar y validar los datos de los estudiantes
+    """
+    estudiantes = set()  # Crea un conjunto vacío para almacenar los nombres de estudiantes
+    contador = 1         # Inicia un contador para numerar los estudiantes que se van a ingresar
+    
+    print("\n" + "="*50)    # Línea divisoria para visualizar mejor la información
+    print("INGRESO DE ESTUDIANTES")
+    print("="*50)           # Línea divisoria para visualizar mejor la información
+    
+    while True:            # Bucle infinito hasta que se ingrese "fin"
+# Pide al usuario que ingrese un nombre, usa cadena formateada (f-string) para mostrar el número, y strip() elimina espacios al inicio/final
+        nombre = input(f"Ingrese el nombre del estudiante número {contador} o 'fin' para terminar: ").strip()
+
+        # Validar si el usuario quiere terminar
+        if nombre.lower() == 'fin':   # Convierte el texto a minúsculas y verifica si es "fin"
+            if len(estudiantes) == 0:   # Verifica si no se ha ingresado ningún estudiante
+                print("❌ Debe ingresar al menos un estudiante. Inténtelo de nuevo.")
+                continue   # Vuelve al inicio del bucle
+            break          # Sale del bucle while si ya hay estudiantes ingresados
+        
+        # Validar que el nombre no esté vacío
+        if not nombre:     # Verifica si el nombre está vacío después de quitar espacios
+            print("❌ El nombre no debe estar vacío. Inténtelo de nuevo.")
+            continue
+        
+        # Validar que el nombre no contenga números
+        if any(caracter.isdigit() for caracter in nombre):  # any() verifica si algún carácter es dígito, isdigit() retorna True si es número
+            print("❌ El nombre no puede contener números. Inténtelo de nuevo.")
+            continue
+        
+        # Convertir a formato estándar (primera letra mayúscula, resto minúsculas)
+        nombre = nombre.title()
+        
+        # Verificar si el estudiante ya fue ingresado (ignorando mayúsculas/minúsculas)
+        if any(nombre.lower() == est.lower() for est in estudiantes):   # any() verifica si ya existe un nombre igual (ignorando mayúsculas/minúsculas)
+            print(f"❌ El estudiante '{nombre}' ya fue ingresado. Inténtelo de nuevo.")
+            continue
+        
+        estudiantes.add(nombre)    # Agrega el nombre válido al conjunto de estudiantes
+        print(f"✅ Estudiante '{nombre}' agregado correctamente.")   # Mensaje de confirmación
+        contador += 1     # Incrementa el contador para el siguiente estudiante
+    
+    return estudiantes    # Retorna el conjunto completo de estudiantes
+
+#  Función que analiza dos conjuntos de estudiantes y retorna un diccionario con la información solicitada
+def Analizar(estudiantes1, estudiantes2):
+    # Convertir todos los nombres a minúsculas para comparación case-insensitive (sin distinguir mayúsculas/minúsculas)
+    estudiantes1_lower = {est.lower() for est in estudiantes1}  # Crea un nuevo conjunto con todos los nombres en minúsculas del primer grupo
+    estudiantes2_lower = {est.lower() for est in estudiantes2}  # Crea un nuevo conjunto con todos los nombres en minúsculas del segundo grupo
+    
+    # Encontrar los nombres originales que coinciden (manteniendo el formato original)
+    en_ambos = set()           # Crea un conjunto vacío para estudiantes en ambos grupos
+    for est1 in estudiantes1:      # Itera sobre cada estudiante del primer grupo
+        for est2 in estudiantes2:     # Itera sobre cada estudiante del segundo grupo
+            if est1.lower() == est2.lower():      # Compara los nombres en minúsculas
+                # Preferir el formato del primer conjunto
+                en_ambos.add(est1)      # Agrega el nombre del primer grupo al conjunto de estudiantes en ambos grupos
+                break                   # Sale del bucle interno cuando encuentra coincidencia
+    
+    # Estudiantes solo en el primer grupo
+    solo_primer_grupo = {est for est in estudiantes1 if est.lower() not in estudiantes2_lower}   
+    
+    # Estudiantes solo en el segundo grupo 
+    solo_segundo_grupo = {est for est in estudiantes2 if est.lower() not in estudiantes1_lower}
+    
+    # Todos los estudiantes (uniendo ambos conjuntos, resolviendo duplicados case-insensitive)
+    todos_estudiantes = set()
+    estudiantes_vistos = set()
+    
+    for est in estudiantes1:      # Recorre todos los estudiantes del primer grupo
+        todos_estudiantes.add(est)    # Agrega el estudiante al conjunto de todos los estudiantes
+        estudiantes_vistos.add(est.lower())    # Marca el nombre en minúsculas como visto
+    
+    for est in estudiantes2:      # Recorre todos los estudiantes del segundo grupo
+        if est.lower() not in estudiantes_vistos:   # Verifica si el nombre en minúsculas ya fue visto
+            todos_estudiantes.add(est)        # Agrega el estudiante al conjunto de todos los estudiantes
+    
+    return {                         # Retorna un diccionario con los resultados
+        'en_ambos_grupos': en_ambos,     # Estudiantes en ambos grupos
+        'solo_primer_grupo': solo_primer_grupo,     # Estudiantes solo en el primer grupo
+        'solo_segundo_grupo': solo_segundo_grupo,    # Estudiantes solo en el segundo grupo
+        'todos_estudiantes': todos_estudiantes      # Todos los estudiantes
+    }
+
+def mostrar_resultados(resultados):     #Función para mostrar los resultados de forma ordenada y legible
+
+    print("\n" + "="*60)          # Línea divisoria para visualizar mejor la información
+    print("🎯 RESULTADOS DEL ANÁLISIS")   # Título del análisis
+    print("="*60)                 # Línea divisoria para visualizar mejor la información
+    
+    # a) Estudiantes en ambos grupos
+    print("\na) Estudiantes en ambos grupos:")  
+    print("-" * 30)
+    if resultados['en_ambos_grupos']:        # Verifica si hay estudiantes en común
+        for i, estudiante in enumerate(sorted(resultados['en_ambos_grupos']), 1):     # Ordena y enumera los estudiantes en común
+            print(f"  {i}. {estudiante}")    # Imprime cada estudiante con su número correspondiente
+    else:                                    # Si no hay estudiantes en común:
+        print("  No hay estudiantes en común entre los grupos.")    # Mensaje informativo
+    
+    # b) Estudiantes solo en el primer grupo
+    print("\nb) Estudiantes solo en el primer grupo:")
+    print("-" * 40)
+    if resultados['solo_primer_grupo']:      # Verifica si hay estudiantes exclusivos del primer grupo
+        for i, estudiante in enumerate(sorted(resultados['solo_primer_grupo']), 1):  # Ordena y enumera los estudiantes exclusivos del primer grupo
+            print(f"  {i}. {estudiante}")   # Imprime cada estudiante con su número correspondiente
+    else:                                   # Si no hay estudiantes exclusivos del primer grupo:
+        print("  No hay estudiantes exclusivos del primer grupo.")  # Mensaje informativo
+    
+    # c) Estudiantes solo en el segundo grupo
+    print("\nc) Estudiantes solo en el segundo grupo:")    
+    print("-" * 40)
+    if resultados['solo_segundo_grupo']:     # Verifica si hay estudiantes exclusivos del segundo grupo
+        for i, estudiante in enumerate(sorted(resultados['solo_segundo_grupo']), 1): # Ordena y enumera los estudiantes exclusivos del segundo grupo
+            print(f"  {i}. {estudiante}")    # Imprime cada estudiante con su número correspondiente
+    else:                                    # Si no hay estudiantes exclusivos del segundo grupo:
+        print("  No hay estudiantes exclusivos del segundo grupo.") # Mensaje informativo
+    
+    # d) Todos los estudiantes
+    print("\nd) Todos los estudiantes:")     
+    print("-" * 20)
+    if resultados['todos_estudiantes']:       # Verifica si hay estudiantes registrados
+        for i, estudiante in enumerate(sorted(resultados['todos_estudiantes']), 1):  # Ordena y enumera todos los estudiantes
+            print(f"  {i}. {estudiante}")     # Imprime cada estudiante con su número correspondiente
+    else:                                     # Si no hay estudiantes registrados:
+        print("  No hay estudiantes registrados.")  # Mensaje informativo
+    
+    # Estadísticas resumen
+    print("\n" + "="*60)              # Línea divisoria para visualizar mejor la información
+    print("ℹ️. ESTADÍSTICAS:")     # Título de las estadísticas resumen
+    print("="*60)                        # Línea divisoria para visualizar mejor la información                          
+    print(f"Total de estudiantes únicos: {len(resultados['todos_estudiantes'])}")  # Imprime el total de estudiantes únicos
+    print(f"Estudiantes en común: {len(resultados['en_ambos_grupos'])}")        # Imprime el total de estudiantes en común
+    print(f"Estudiantes exclusivos del grupo 1: {len(resultados['solo_primer_grupo'])}")  # Imprime el total de estudiantes exclusivos del primer grupo
+    print(f"Estudiantes exclusivos del grupo 2: {len(resultados['solo_segundo_grupo'])}")   # Imprime el total de estudiantes exclusivos del segundo grupo
+
+def main():     # Función principal que coordina todo el programa
+    
+    print("ANÁLISIS DE GRUPOS DE ESTUDIANTES")
+    print("="*60)
+    
+    # Ingresar estudiantes del primer grupo
+    print("\n📌 PRIMER GRUPO DE ESTUDIANTES")
+    estudiantes1 = ingresar_estudiantes()  # Llama a la función para ingresar estudiantes del primer grupo
+    print("="*60)                      # Línea divisoria para visualizar mejor la información
+    # Ingresar estudiantes del segundo grupo
+    print("\n📌 SEGUNDO GRUPO DE ESTUDIANTES")
+    estudiantes2 = ingresar_estudiantes()   # Llama a la función para ingresar estudiantes del segundo grupo
+    
+    # Realizar el análisis
+    resultados = Analizar(estudiantes1, estudiantes2)  # Llama a la función para analizar los dos grupos de estudiantes
+    
+    # Mostrar resultados
+    mostrar_resultados(resultados)   # Llama a la función para mostrar los resultados del análisis
+
+# Ejecutar el programa
+if __name__ == "__main__":   # Verifica si el script se está ejecutando directamente
+    main()                   # Llama a la función principal para iniciar el programa
