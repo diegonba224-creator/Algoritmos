@@ -1,0 +1,70 @@
+import os    # Se importa la libreria os
+def limpiar_terminal():    # Se crea la funcion limpar_terminal
+        os.system("cls")    # Ejecuto el comando cls
+limpiar_terminal()       # Llamo la funcion creada
+
+def insertion_sort(lista):
+    """
+    Ordena una lista usando Insertion Sort
+    """
+    for i in range(1, len(lista)):              # Itero desde el segundo elemento hasta el final
+        elemento_actual = lista[i]              # Guardo el elemento actual a insertar
+        j = i - 1                               # Índice del elemento anterior 
+        
+        while j >= 0 and lista[j] > elemento_actual:   # Muevo los elementos mayores hacia la derecha 
+            lista[j + 1] = lista[j]                    # Desplazo el elemento hacia la derecha 
+            j -= 1                                     # Paso al siguiente elemento a la izquierda 
+        
+        lista[j + 1] = elemento_actual                 # Inserto el elemento en su posición correcta 
+    
+    return lista                                       # Retorno la lista ordenada 
+
+def busqueda_binaria(lista_ordenada, x):               # defino la funcion busqueda_binaria 
+    """
+    Realiza búsqueda binaria en lista ordenada (MUCHO más eficiente)
+    """
+    izquierda, derecha = 0, len(lista_ordenada) - 1    # Defino los índices inicial y final de la lista  
+    
+    while izquierda <= derecha:                        # Mientras el índice izquierdo no supere al derecho 
+        medio = (izquierda + derecha) // 2             # Calculo el índice del elemento medio 
+        
+        if lista_ordenada[medio] == x:                 # si el elemento medio es igual al valor buscado: 
+            return medio  # Elemento encontrado
+        elif lista_ordenada[medio] < x:                # Si el elemento medio es menor que el valor buscado: 
+            izquierda = medio + 1  # Buscar en la mitad derecha
+        else:                                          # Si el elemento medio es mayor que el valor buscado:
+            derecha = medio - 1   # Buscar en la mitad izquierda
+    
+    return -1  # Elemento no encontrado
+
+# Lista original
+elementos = [5, 7, 10, 12, 15, 60, 69, 98, 90, 24, 35, 33, 11]   # Defino la lista de elementos 
+
+print("📝 La lista ORIGINAL de elementos es:", elementos)      
+print(40*"-")
+
+# ORDENAR con Insertion Sort
+print("🔄 Aplicando Insertion Sort...")                     
+elementos_ordenados = insertion_sort(elementos.copy())  # Ordeno la lista usando Insertion Sort 
+print("✅ Lista ORDENADA:", elementos_ordenados)       # Muestro la lista ordenada 
+print(40*"-")
+
+# Búsqueda
+x = int(input("Ingrese el elemento a buscar: "))       # Solicito el elemento a buscar y lo convierto a entero
+
+print(40*"-")
+print("🔍 Realizando búsqueda binaria...")
+posicion = busqueda_binaria(elementos_ordenados, x)    # Realizo la búsqueda binaria 
+
+if posicion != -1:
+    print("🎯 Elemento encontrado en la posición:", posicion + 1)
+    print(40*"-")  
+    print("📍 Índice en la lista ordenada:", posicion)
+    
+    # Mostrar también la posición en la lista original
+    if x in elementos:                                 # Verifico si el elemento está en la lista original 
+        pos_original = elementos.index(x)              # Obtengo la posición en la lista original 
+        print("📌 Posición en la lista original:", pos_original + 1)
+else:                                                  # Si el elemento no fue encontrado:
+    print("❌ Elemento no encontrado")
+print(40*"-")
