@@ -1,0 +1,41 @@
+"""
+1. Crea una lista con todos los países de Latinoamérica y otra lista con sus respectivas poblaciones, con base a esto vas a generar:
+a) un listado de países con las poblaciones mayores a 20 millones de habitantes.
+b) un listado de países con las poblaciones menores a 20 millones de habitantes.
+nota: presenta de manera detallada y bien organizada cada una de las listas generadas, utilizado dict comprehension. VALOR (25%)
+"""
+
+import os    # Se importa la libreria os
+def limpiar_terminal():    # Se crea la funcion limpar_terminal
+        os.system("cls")    # Ejecuto el comando cls
+limpiar_terminal()       # Llamo la funcion creada
+
+
+paises=["Colombia", "Brasil", "Venezuela", "Chile", "Peru", "Ecuador", "Bolivia", "Uruguay", "Paraguay", "Argentina", 
+        "Costa Rica", "El Salvador", "Nicaragua", "Panamá", "Honduras", "Guatemala", "Cuba",
+        "Puerto Rico", "República Dominicana", "México", "Haití", "" ]
+poblacion=[53.4,212.8,28.5,19.8,34.5,18.2,12.5,3.3,7,45.8,5.1,6.3,7,4.5,11,18.7,10.9,3.2,11.5,132,11.9]
+
+# 1. Creo el diccionario principal con Dict Comprehension
+# Creo un diccionario donde cada país es la clave y su población es el valor
+# zip se usa para combinar las dos listas en pares de elementos
+# con "for" se itera sobre cada par (país, población) 
+poblacion_paises = {pais:poblacion for pais, poblacion in zip(paises, poblacion)} 
+
+# a) Dict Comprehension para países con población mayor a 20 millones
+# poblacion_paises.items(): Convierte el diccionario en una lista de tuplas (clave, valor)
+mayores_20m = {pais:poblacion for pais, poblacion in poblacion_paises.items() if poblacion > 20}
+# la condición if establece que se debe cumplir. En este caso población mayor a 20 millones
+
+# b) Dict Comprehension para países con población menor a 20 millones
+menores_20m = {pais:poblacion for pais, poblacion in poblacion_paises.items() if poblacion < 20}
+
+print("Países con mas de 20 millones de habitantes: ")
+for i, (pais, poblacion) in enumerate(mayores_20m.items(), 1):  
+    print(f"{i:2d}. {pais}: {poblacion:.2f} millones")  # imprimir la cadena formateada con la información de país y población
+print(50*"-")
+print("Países con menos de 20 millones de habitantes: ")
+for i, (pais, poblacion) in enumerate(menores_20m.items(), 1):  
+    print(f"{i}. {pais}: {poblacion:.2f} millones")
+print(50*"-")
+
